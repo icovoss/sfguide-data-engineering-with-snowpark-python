@@ -112,8 +112,19 @@ if __name__ == "__main__":
     parent_dir = os.path.dirname(current_dir)
     sys.path.append(parent_dir)
 
-    from utils import snowpark_utils
-    session = snowpark_utils.get_snowpark_session()
+    # from utils import snowpark_utils
+    # session = snowpark_utils.get_snowpark_session()
+    CONNECTION_PARAMETERS = {
+            "account":"initions.west-europe.azure", 
+            "user":"oliver.voss@initions-consulting.com", 
+            "authenticator":"externalbrowser",
+            "database":"HOL_DB",
+            #"schema":"",
+            "warehouse":"WH_XS",
+            "role":"HOL_ROLE"
+        }
+    session = Session.builder.configs(CONNECTION_PARAMETERS).create()
+
 
     create_pos_view(session)
     create_pos_view_stream(session)

@@ -38,7 +38,7 @@ def load_raw_table(session, tname=None, s3dir=None, year=None, schema=None):
 # SNOWFLAKE ADVANTAGE: Warehouse elasticity (dynamic scaling)
 
 def load_all_raw_tables(session):
-    _ = session.sql("ALTER WAREHOUSE HOL_WH SET WAREHOUSE_SIZE = XLARGE WAIT_FOR_COMPLETION = TRUE").collect()
+    # _ = session.sql("ALTER WAREHOUSE HOL_WH SET WAREHOUSE_SIZE = XLARGE WAIT_FOR_COMPLETION = TRUE").collect()
 
     for s3dir, data in TABLE_DICT.items():
         tnames = data['tables']
@@ -53,7 +53,7 @@ def load_all_raw_tables(session):
             else:
                 load_raw_table(session, tname=tname, s3dir=s3dir, schema=schema)
 
-    _ = session.sql("ALTER WAREHOUSE HOL_WH SET WAREHOUSE_SIZE = XSMALL").collect()
+    # _ = session.sql("ALTER WAREHOUSE HOL_WH SET WAREHOUSE_SIZE = XSMALL").collect()
 
 def validate_raw_tables(session):
     # check column names from the inferred schema
@@ -72,8 +72,18 @@ if __name__ == "__main__":
     parent_dir = os.path.dirname(current_dir)
     sys.path.append(parent_dir)
 
-    from utils import snowpark_utils
-    session = snowpark_utils.get_snowpark_session()
+    # from utils import snowpark_utils
+    # session = snowpark_utils.get_snowpark_session()
+    CONNECTION_PARAMETERS = {
+            "account":"initions.west-europe.azure", 
+            "user":"oliver.voss@initions-consulting.com", 
+            "authenticator":"externalbrowser",
+            "database":"HOL_DB",
+            #"schema":"",
+            "warehouse":"WH_XS",
+            "role":"HOL_ROLE"
+        }
+    session = Session.builder.configs(CONNECTION_PARAMETERS).create()
 
     load_all_raw_tables(session)
 #    validate_raw_tables(session)

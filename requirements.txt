@@ -1,2 +1,4 @@
 snowflake-snowpark-python[pandas]
 snowflake-cli-labs==0.2.9
+ipykernel
+jupyter
